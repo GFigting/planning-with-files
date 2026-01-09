@@ -16,7 +16,7 @@ A Claude Code plugin containing an [Agent Skill](https://code.claude.com/docs/en
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-blue)](https://code.claude.com/docs/en/plugins)
 [![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-green)](https://code.claude.com/docs/en/skills)
 [![Cursor Rules](https://img.shields.io/badge/Cursor-Rules-purple)](https://docs.cursor.com/context/rules-for-ai)
-[![Version](https://img.shields.io/badge/version-2.0.0-brightgreen)](https://github.com/OthmanAdi/planning-with-files/releases)
+[![Version](https://img.shields.io/badge/version-2.0.1-brightgreen)](https://github.com/OthmanAdi/planning-with-files/releases)
 
 ## Versions
 
@@ -148,6 +148,74 @@ Once installed, Claude will automatically:
 2. **The 2-Action Rule** — Save findings after every 2 view/browser operations
 3. **Log ALL Errors** — They help avoid repetition
 4. **Never Repeat Failures** — Track attempts, mutate approach
+
+## Troubleshooting
+
+### Planning files created in wrong directory
+
+**Issue:** When using `/plan`, the files (`task_plan.md`, `findings.md`, `progress.md`) are created in the skill installation directory instead of your project.
+
+**Why this happens:** When the skill runs as a subagent, it may not inherit your terminal's current working directory.
+
+**Solutions:**
+
+1. **Specify your project path when invoking:**
+   ```
+   /plan - I'm working in /path/to/my-project/, create all files there
+   ```
+
+2. **Add context before invoking:**
+   ```
+   I'm working on the project at /path/to/my-project/
+   ```
+   Then run `/plan`.
+
+3. **Create a CLAUDE.md in your project root:**
+   ```markdown
+   # Project Context
+
+   All planning files (task_plan.md, findings.md, progress.md)
+   should be created in this directory.
+   ```
+
+4. **Use the skill directly without subagent:**
+   ```
+   Help me plan this task using the planning-with-files approach.
+   Create task_plan.md, findings.md, and progress.md here.
+   ```
+
+**Fixed in v2.0.1:** The skill instructions now explicitly specify that planning files should be created in your project directory, not the skill installation folder.
+
+---
+
+### Files not persisting between sessions
+
+**Issue:** Planning files seem to disappear or aren't found when resuming work.
+
+**Solution:** Make sure the files are in your project root, not in a temporary location. Check with:
+```bash
+ls -la task_plan.md findings.md progress.md
+```
+
+---
+
+### Hooks not triggering
+
+**Issue:** The PreToolUse hook (which reads task_plan.md before actions) doesn't seem to run.
+
+**Solution:**
+1. Ensure you're using Claude Code v1.0.18 or later
+2. Verify the skill is installed correctly: `ls ~/.claude/skills/planning-with-files/`
+3. Check that `task_plan.md` exists in your current directory
+
+---
+
+### Need help?
+
+Open an issue at [github.com/OthmanAdi/planning-with-files/issues](https://github.com/OthmanAdi/planning-with-files/issues) with:
+- Your Claude Code version (`claude --version`)
+- The command you ran
+- What happened vs what you expected
 
 ## File Structure
 
