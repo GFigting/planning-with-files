@@ -6,11 +6,18 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Kilo Code Support** (PR #30 by @aimasteracc)
+  - Added Kilo Code IDE compatibility for the planning-with-files skill
+  - Created `.kilocode/rules/planning-with-files.md` with IDE-specific rules
+  - Added `docs/kilocode.md` comprehensive documentation for Kilo Code users
+  - Enables seamless integration with Kilo Code's planning workflow
+
 - **Windows PowerShell Support** (Fixes #32, #25)
   - Created `check-complete.ps1` - PowerShell equivalent of bash script
   - Created `init-session.ps1` - PowerShell session initialization
   - Scripts available in all three locations (root, plugin, skills)
   - OS-aware hook execution with automatic fallback
+  - Improves Windows user experience with native PowerShell support
 
 - **CONTRIBUTORS.md**
   - Recognizes all community contributors
@@ -38,20 +45,36 @@ All notable changes to this project will be documented in this file.
   - Supports pwsh (PowerShell Core), powershell (Windows PowerShell), and bash
   - Automatic fallback chain for maximum compatibility
 
+- **Documentation Updates**
+  - Updated to support both Claude Code and Kilo Code environments
+  - Enhanced template compatibility across different AI coding assistants
+  - Updated `.gitignore` to include `findings.md` and `progress.md`
+
+### Files Added
+
+- `.kilocode/rules/planning-with-files.md` - Kilo Code IDE rules
+- `docs/kilocode.md` - Kilo Code-specific documentation
+- `scripts/check-complete.ps1` - PowerShell completion check (root level)
+- `scripts/init-session.ps1` - PowerShell session init (root level)
+- `planning-with-files/scripts/check-complete.ps1` - PowerShell (plugin level)
+- `planning-with-files/scripts/init-session.ps1` - PowerShell (plugin level)
+- `skills/planning-with-files/scripts/check-complete.ps1` - PowerShell (skills level)
+- `skills/planning-with-files/scripts/init-session.ps1` - PowerShell (skills level)
+- `CONTRIBUTORS.md` - Community contributor recognition
+- `COMPREHENSIVE_ISSUE_ANALYSIS.md` - Detailed issue research and solutions
+
 ### Documentation
 
 - Added Windows troubleshooting guidance
 - Recognized community contributors in CONTRIBUTORS.md
-- Updated README to reflect Windows support
+- Updated README to reflect Windows and Kilo Code support
 
 ### Thanks
 
 Special thanks to:
+- @aimasteracc for Kilo Code support and PowerShell script contribution (PR #30)
 - @mtuwei for reporting Windows compatibility issues (#32)
-- @aimasteracc for Kilocode support and PowerShell script contribution (PR #30)
 - All community members who tested and provided feedback
-
----
 
 ## [2.1.2] - 2026-01-11
 
@@ -166,7 +189,6 @@ If you still experience issues after updating:
 
 - **New Documentation**
   - `CHANGELOG.md` - This file
-  - `MIGRATION.md` - Guide for upgrading from v1.x
 
 - **Enhanced SKILL.md**
   - The 2-Action Rule (save findings after every 2 view/browser operations)

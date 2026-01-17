@@ -37,12 +37,13 @@ See [docs/installation.md](docs/installation.md) for all installation methods.
 | [Troubleshooting](docs/troubleshooting.md) | Common issues and solutions |
 | [Cursor Setup](docs/cursor.md) | Cursor IDE-specific instructions |
 | [Windows Setup](docs/windows.md) | Windows-specific notes |
+| [Kilo Code Support](docs/kilocode.md) | Kilo Code integration guide |
 
 ## Versions
 
 | Version | Features | Install |
 |---------|----------|---------|
-| **v2.2.0** (current) | Windows PowerShell support, OS-aware hooks | `/plugin install planning-with-files@planning-with-files` |
+| **v2.2.0** (current) | Kilo Code IDE support, Windows PowerShell support, OS-aware hooks | `/plugin install planning-with-files@planning-with-files` |
 | **v2.1.2** | Fix template cache issue (Issue #18) | See [releases](https://github.com/OthmanAdi/planning-with-files/releases) |
 | **v2.1.1** | Fix plugin template paths | See [releases](https://github.com/OthmanAdi/planning-with-files/releases) |
 | **v2.1.0** | Claude Code v2.1 compatible, SessionStart hook, PostToolUse hook, user-invocable | See [releases](https://github.com/OthmanAdi/planning-with-files/releases) |
@@ -120,7 +121,8 @@ planning-with-files/
 │   ├── workflow.md
 │   ├── troubleshooting.md
 │   ├── cursor.md
-│   └── windows.md
+│   ├── windows.md
+│   └── kilocode.md
 ├── planning-with-files/     # Plugin skill folder
 │   ├── SKILL.md
 │   ├── templates/
@@ -128,12 +130,20 @@ planning-with-files/
 ├── skills/                  # Legacy skill folder
 │   └── planning-with-files/
 │       ├── SKILL.md
+│       ├── examples.md
+│       ├── reference.md
 │       ├── templates/
 │       └── scripts/
+│           ├── init-session.sh
+│           ├── check-complete.sh
+│           ├── init-session.ps1   # Windows PowerShell
+│           └── check-complete.ps1 # Windows PowerShell
 ├── .claude-plugin/          # Plugin manifest
 ├── .cursor/                 # Cursor rules
+├── .kilocode/               # Kilo Code rules
+│   └── rules/
+│       └── planning-with-files.md
 ├── CHANGELOG.md
-├── MIGRATION.md
 ├── LICENSE
 └── README.md
 ```
@@ -160,6 +170,16 @@ planning-with-files/
 - Simple questions
 - Single-file edits
 - Quick lookups
+
+## Kilo Code Support
+
+This skill also supports Kilo Code AI through the `.kilocode/rules/` directory.
+
+The [`.kilocode/rules/planning-with-files.md`](.kilocode/rules/planning-with-files.md) file contains all the planning guidelines formatted for Kilo Code's rules system, providing the same Manus-style planning workflow for Kilo Code users.
+
+**Windows users:** The skill now includes PowerShell scripts ([`init-session.ps1`](skills/planning-with-files/scripts/init-session.ps1) and [`check-complete.ps1`](skills/planning-with-files/scripts/check-complete.ps1)) for native Windows support.
+
+See [docs/kilocode.md](docs/kilocode.md) for detailed Kilo Code integration guide.
 
 ## Community Forks
 
