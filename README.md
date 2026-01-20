@@ -50,12 +50,14 @@ See [docs/installation.md](docs/installation.md) for all installation methods.
 | IDE | Status | Installation Guide | Format |
 |-----|--------|-------------------|--------|
 | Claude Code | ✅ Full Support | [Installation](docs/installation.md) | Plugin + SKILL.md |
-| Cursor | ✅ Full Support | [Cursor Setup](docs/cursor.md) | Rules |
-| Kilocode | ✅ Full Support | [Kilocode Setup](docs/kilocode.md) | Rules |
+| Cursor | ✅ Full Support | [Cursor Setup](docs/cursor.md) | Skills |
+| Kilocode | ✅ Full Support | [Kilocode Setup](docs/kilocode.md) | Skills |
 | OpenCode | ✅ Full Support | [OpenCode Setup](docs/opencode.md) | Personal/Project Skill |
 | Codex | ✅ Full Support | [Codex Setup](docs/codex.md) | Personal Skill |
 | FactoryAI Droid | ✅ Full Support | [Factory Setup](docs/factory.md) | Workspace/Personal Skill |
 | Antigravity | ✅ Full Support | [Antigravity Setup](docs/antigravity.md) | Workspace/Personal Skill |
+
+> **Note:** If your IDE uses the legacy Rules system instead of Skills, see the [`legacy-rules-support`](https://github.com/OthmanAdi/planning-with-files/tree/legacy-rules-support) branch.
 
 ## Documentation
 

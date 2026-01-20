@@ -1,37 +1,78 @@
+---
+name: planning-with-files
+version: "2.4.1"
+description: Implements Manus-style file-based planning for complex tasks. Creates task_plan.md, findings.md, and progress.md. Use when starting complex multi-step tasks, research projects, or any task requiring >5 tool calls. Now with automatic session recovery after /clear.
+user-invocable: true
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Glob
+  - Grep
+  - WebFetch
+  - WebSearch
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit|Bash|Read|Glob|Grep"
+      hooks:
+        - type: command
+          command: "cat task_plan.md 2>/dev/null | head -30 || true"
+  PostToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: "echo '[planning-with-files] File updated. If this completes a phase, update task_plan.md status.'"
+  Stop:
+    - hooks:
+        - type: command
+          command: |
+            if command -v pwsh &> /dev/null && [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" || "$OS" == "Windows_NT" ]]; then
+              pwsh -ExecutionPolicy Bypass -File "${CLAUDE_PLUGIN_ROOT}/scripts/check-complete.ps1" 2>/dev/null || powershell -ExecutionPolicy Bypass -File "${CLAUDE_PLUGIN_ROOT}/scripts/check-complete.ps1" 2>/dev/null || bash "${CLAUDE_PLUGIN_ROOT}/scripts/check-complete.sh"
+            else
+              bash "${CLAUDE_PLUGIN_ROOT}/scripts/check-complete.sh"
+            fi
+---
+
 # Planning with Files
 
 Work like Manus: Use persistent markdown files as your "working memory on disk."
 
-## Session Recovery
+## FIRST: Check for Previous Session (v2.2.0)
 
-**Before starting work**, check if you have unfinished context from a previous session:
+**Before starting work**, check for unsynced context from a previous session:
 
-1. Review your project's recent git history with `git log --oneline -10`
-2. Check `git diff --stat` to see uncommitted changes
-3. Read existing planning files (`task_plan.md`, `findings.md`, `progress.md`)
-4. Update planning files with any missing context from git history
-5. Then proceed with your current task
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/session-catchup.py "$(pwd)"
+```
 
-This manual recovery ensures you don't lose important decisions or discoveries when starting a new session.
+If catchup report shows unsynced context:
+1. Run `git diff --stat` to see actual code changes
+2. Read current planning files
+3. Update planning files based on catchup + git diff
+4. Then proceed with task
 
 ## Important: Where Files Go
 
-**Create all planning files in your project root directory:**
-- `task_plan.md` — In your project root
-- `findings.md` — In your project root
-- `progress.md` — In your project root
+- **Templates** are in `${CLAUDE_PLUGIN_ROOT}/templates/`
+- **Your planning files** go in **your project directory**
 
-Do NOT create these files in the `.kilocode/` directory. They belong in your main project folder where your code lives.
+| Location | What Goes There |
+|----------|-----------------|
+| Skill directory (`${CLAUDE_PLUGIN_ROOT}/`) | Templates, scripts, reference docs |
+| Your project directory | `task_plan.md`, `findings.md`, `progress.md` |
 
 ## Quick Start
 
 Before ANY complex task:
 
-1. **Create `task_plan.md`** — Phase tracking and progress
-2. **Create `findings.md`** — Research and discoveries
-3. **Create `progress.md`** — Session log and test results
+1. **Create `task_plan.md`** — Use [templates/task_plan.md](templates/task_plan.md) as reference
+2. **Create `findings.md`** — Use [templates/findings.md](templates/findings.md) as reference
+3. **Create `progress.md`** — Use [templates/progress.md](templates/progress.md) as reference
 4. **Re-read plan before decisions** — Refreshes goals in attention window
 5. **Update after each phase** — Mark complete, log errors
+
+> **Note:** Planning files go in your project root, not the skill installation folder.
 
 ## The Core Pattern
 
@@ -134,20 +175,6 @@ If you can answer these, your context management is solid:
 | What have I learned? | findings.md |
 | What have I done? | progress.md |
 
-## Manus Principles
-
-### Principle 1: Filesystem as External Memory
-Store large content in files, keep only paths in context. Agent can "look up" information when needed.
-
-### Principle 2: Attention Manipulation
-After ~50 tool calls, models forget original goals ("lost in the middle" effect). Re-reading `task_plan.md` brings goals back into the attention window.
-
-### Principle 3: Keep Failure Traces
-Keep failed actions in the plan file. The model updates its understanding when seeing failures. Error recovery is "one of the clearest signals of TRUE agentic behavior."
-
-### Principle 4: Avoid Few-Shot Overfitting
-Vary phrasings slightly. Don't copy-paste patterns blindly. Uniformity breeds fragility.
-
 ## When to Use This Pattern
 
 **Use for:**
@@ -162,6 +189,27 @@ Vary phrasings slightly. Don't copy-paste patterns blindly. Uniformity breeds fr
 - Single-file edits
 - Quick lookups
 
+## Templates
+
+Copy these templates to start:
+
+- [templates/task_plan.md](templates/task_plan.md) — Phase tracking
+- [templates/findings.md](templates/findings.md) — Research storage
+- [templates/progress.md](templates/progress.md) — Session logging
+
+## Scripts
+
+Helper scripts for automation:
+
+- `scripts/init-session.sh` — Initialize all planning files
+- `scripts/check-complete.sh` — Verify all phases complete
+- `scripts/session-catchup.py` — Recover context from previous session (v2.2.0)
+
+## Advanced Topics
+
+- **Manus Principles:** See [reference.md](reference.md)
+- **Real Examples:** See [examples.md](examples.md)
+
 ## Anti-Patterns
 
 | Don't | Do Instead |
@@ -172,3 +220,4 @@ Vary phrasings slightly. Don't copy-paste patterns blindly. Uniformity breeds fr
 | Stuff everything in context | Store large content in files |
 | Start executing immediately | Create plan file FIRST |
 | Repeat failed actions | Track attempts, mutate approach |
+| Create files in skill directory | Create files in your project |
