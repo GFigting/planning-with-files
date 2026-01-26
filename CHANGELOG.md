@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.11.0] - 2026-01-26
+
+### Added
+
+- **`/plan` Command for Easier Autocomplete** (Issue #39)
+  - Added `commands/plan.md` creating `/planning-with-files:plan` command
+  - Users can now type `/plan` and see the command in autocomplete
+  - Shorter alternative to `/planning-with-files:start`
+  - Works immediately after plugin installation - no extra setup required
+
+### Usage
+
+After installing the plugin, you have two command options:
+
+| Command | How to Find | Works Since |
+|---------|-------------|-------------|
+| `/planning-with-files:plan` | Type `/plan` | v2.11.0 |
+| `/planning-with-files:start` | Type `/planning` | v2.6.0 |
+
+### Thanks
+
+- @wqh17101 for persistent reminders in Discussion #36
+- @dalisoft, @zoffyzhang, @yyuziyu for feedback and workarounds in Issue #39
+- Community for patience while we found the right solution
+
+---
+
 ## [2.10.0] - 2026-01-26
 
 ### Added
