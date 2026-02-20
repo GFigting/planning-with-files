@@ -307,7 +307,6 @@ planning-with-files/
 ## Contributors
 
 - [@codelyc](https://github.com/codelyc) — OpenCode scripts support
-- [@gydx6](https://github.com/gydx6) — Session catchup false-positive fix
 
 ## Acknowledgments
 
