@@ -43,7 +43,7 @@ hooks:
               sh "$SCRIPT_DIR/check-complete.sh"
             fi
 metadata:
-  version: "2.10.0"
+  version: "2.16.1"
 ---
 
 # Planning with Files
