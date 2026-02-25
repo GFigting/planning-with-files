@@ -35,6 +35,7 @@ Everyone who made this project better — bug reports, PRs, and integrations.
 
 | Contributor | Contribution |
 |-------------|-------------|
+| [@popey](https://github.com/popey) | Skill metadata & discoverability fixes (PR #83) |
 | [@lincolnwan](https://github.com/lincolnwan) | GitHub Copilot hooks support (PR #80) |
 | [@gydx6](https://github.com/gydx6) | Session catchup false-positive fix (PR #79) |
 | [@ciberponk](https://github.com/ciberponk) | Isolated plan sessions with UUID pinning (PR #77) |
@@ -366,4 +367,4 @@ MIT License — feel free to use, modify, and distribute.
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=OthmanAdi/planning-with-files&type=Date)](https://star-history.com/#OthmanAdi/planning-with-files&Date)
+[![RepoStars](https://repostars.dev/api/embed?repo=OthmanAdi%2Fplanning-with-files&theme=copper)](https://repostars.dev/?repos=OthmanAdi%2Fplanning-with-files&theme=copper)
