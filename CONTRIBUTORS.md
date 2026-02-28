@@ -61,6 +61,10 @@ These amazing people have contributed code, documentation, or significant improv
 
 ### Other Contributors
 
+- **[@raykuo998](https://github.com/raykuo998)** - [PR #88](https://github.com/OthmanAdi/planning-with-files/pull/88), [PR #86](https://github.com/OthmanAdi/planning-with-files/pull/86)
+  - Fixed `check-complete.ps1` completely failing on PowerShell 5.1 due to special character parse errors in double-quoted strings; switched to single-quoted strings with concatenation across all 12 platform copies (PR #88)
+  - Fixed Stop hook YAML multiline command block failing under Git Bash on Windows; collapsed 25-line OS detection to single-line implicit platform fallback chain across all 7 SKILL.md variants (PR #86)
+
 - **[@gydx6](https://github.com/gydx6)** - [PR #79](https://github.com/OthmanAdi/planning-with-files/pull/79)
   - Fixed session-catchup false positives in all 9 skill-distributed copies
   - Added early return guards for non-planning projects
@@ -121,4 +125,4 @@ If you've contributed and don't see your name here, please open an issue! We wan
 
 **Total Contributors:** 13+ and growing!
 
-*Last updated: February 26, 2026*
+*Last updated: February 28, 2026*
