@@ -251,8 +251,11 @@ class StandaloneSkillHookTests(unittest.TestCase):
         self.assertEqual("", missing.stdout)
         self.assertFalse(marker.exists(), "rejected hooks must not execute an interpreter")
 
-    def test_escaping_selected_plan_does_not_probe_an_interpreter(self) -> None:
+    def test_escaping_selected_plan_does_not_probe_a_path_interpreter(self) -> None:
         probe, marker = self._probe_python()
+        probe_dir = self.root / "probe-bin"
+        probe_dir.mkdir()
+        probe = probe.replace(probe_dir / "python3")
         (self.root / "task_plan.md").unlink()
         outside = Path(tempfile.mkdtemp(prefix="pwf-hook-outside-"))
         self.addCleanup(shutil.rmtree, outside, True)
@@ -265,11 +268,17 @@ class StandaloneSkillHookTests(unittest.TestCase):
             self.skipTest(f"directory symlinks unavailable: {exc}")
 
         escaped = self._run(
-            "posttool", PLAN_ID="escape", PWF_TRUSTED_PYTHON=str(probe)
+            "posttool",
+            PLAN_ID="escape",
+            PWF_TRUSTED_PYTHON="",
+            PYTHON_BIN="",
+            PATH=f"{probe_dir}{os.pathsep}{os.environ.get('PATH', '')}",
         )
 
         self.assertEqual("", escaped.stdout)
-        self.assertFalse(marker.exists(), "containment refusal must precede interpreter probing")
+        self.assertFalse(
+            marker.exists(), "containment refusal must precede PATH interpreter probing"
+        )
 
     def test_invalid_explicit_python_never_falls_through_to_path_for_identity(self) -> None:
         probe, marker = self._probe_python()

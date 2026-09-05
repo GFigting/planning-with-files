@@ -206,6 +206,10 @@ def identity(info):
     return info.st_dev, info.st_ino, info.st_mode
 
 
+def same_object(left, right):
+    return (left.st_dev, left.st_ino) == (right.st_dev, right.st_ino)
+
+
 def acceptable_directory(info):
     if not stat.S_ISDIR(info.st_mode):
         return False
@@ -237,7 +241,9 @@ try:
     if os.name == "posix":
         os.chmod(root, 0o700)
     after = os.lstat(root)
-    if not acceptable_directory(after) or identity(before) != identity(after):
+    # chmod intentionally changes st_mode.  Freeze the directory object across
+    # that operation, then use the post-chmod identity for every later check.
+    if not acceptable_directory(after) or not same_object(before, after):
         raise OSError("cache root changed")
     if os.name == "posix" and stat.S_IMODE(after.st_mode) & 0o077:
         raise OSError("cache root is not private")
@@ -326,7 +332,10 @@ json_string() {
     tr '\001-\011\013-\037' ' ' \
         | awk 'BEGIN { first = 1 }
             {
-                gsub(/\\/, "\\\\")
+                # POSIX awk parses backslashes once in the string literal and
+                # again in replacement text, so eight source slashes are needed
+                # to emit two JSON slashes for each input slash.
+                gsub(/\\/, "\\\\\\\\")
                 gsub(/"/, "\\\"")
                 if (!first) printf "\\n"
                 printf "%s", $0

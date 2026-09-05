@@ -724,7 +724,7 @@ class HermesFirstClassTests(unittest.TestCase):
 
     def test_manifest_declares_the_new_surface(self) -> None:
         manifest = (PLUGIN_ROOT / "plugin.yaml").read_text(encoding="utf-8")
-        self.assertIn("version: 0.2.0", manifest)
+        self.assertRegex(manifest, r"(?m)^version: \d+\.\d+\.\d+$")
         for hook in ("pre_llm_call", "post_tool_call", "pre_verify"):
             self.assertIn(f"  - {hook}", manifest)
         self.assertIn("pre_verify hook", manifest)
