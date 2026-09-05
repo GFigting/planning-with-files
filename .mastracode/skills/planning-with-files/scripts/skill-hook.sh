@@ -327,18 +327,19 @@ claim_turn_marker() {
 }
 
 # Encode the injector's bounded output without interpolating it into a command
-# or format string.  This is the same portable encoder used by the plugin hook.
+# or format string.  Walk characters directly because awk implementations do
+# not agree on how many escapes gsub replacement text consumes.
 json_string() {
     tr '\001-\011\013-\037' ' ' \
         | awk 'BEGIN { first = 1 }
             {
-                # POSIX awk parses backslashes once in the string literal and
-                # again in replacement text, so eight source slashes are needed
-                # to emit two JSON slashes for each input slash.
-                gsub(/\\/, "\\\\\\\\")
-                gsub(/"/, "\\\"")
                 if (!first) printf "\\n"
-                printf "%s", $0
+                for (i = 1; i <= length($0); i++) {
+                    c = substr($0, i, 1)
+                    if (c == "\\") printf "%s", "\\\\"
+                    else if (c == "\"") printf "%s", "\\\""
+                    else printf "%s", c
+                }
                 first = 0
             }'
 }

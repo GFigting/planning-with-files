@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [3.16.1] - 2026-09-05
 
 ### Fixed
+- The Claude plugin and standalone hook JSON encoders now preserve literal backslashes under POSIX awk, including Windows paths and text containing a literal `\n` sequence.
 - Attached Codex, Hermes and Pi sessions could follow another task's shared `.active_plan` pointer. When session isolation is armed and multiple plans exist, these routes and the shared standalone hooks now require `PLAN_ID`. An attachment no longer bypasses nested-root ambiguity checks.
 - Standalone skill PreToolUse and PostToolUse messages were emitted as plain stdout, which Claude Code does not deliver to the model for those events. A shared helper now reads the native JSON session identity and emits `additionalContext`, respects opt-out and rejected selectors, and throttles the progress reminder per turn with a private cache.
 - The native Codex PostToolUse adapter dropped the session ID before writing its reminder marker, while UserPromptSubmit used the real ID to clear it. Both operations now address the same session entry.
