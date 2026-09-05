@@ -507,13 +507,13 @@ Hermes' own `skills-guard` scanner rates the Hermes bundle `SAFE`; the canonical
 ## Multi-agent runs: orchestrators, workers and subagents
 
 > [!NOTE]
-> **Markdown on disk is the shared state between agents.** One orchestrator owns `task_plan.md`, every worker appends to its own ledger, and the hooks resolve the right plan for each thread. No message bus, no runtime-only state, nothing that dies with a process.
+> **Markdown on disk is the shared state between agents.** One orchestrator owns `task_plan.md` and the shared summaries; every worker appends to its own ledger or assigned file. Pin each independent task with `PLAN_ID` before starting its host, or use separate worktrees.
 
 - **Run ledger per agent.** Workers append one JSON line per event to `.planning/<id>/ledger-<agent>.jsonl` (`ledger-append.sh`); `ledger-summary.sh` synthesizes a fixed-shape, KV-cache-stable block from all ledgers that replaces the raw `progress.md` tail in autonomous and gated mode. No free text from disk reaches the model through that block.
 - **Plan isolation per task.** `init-session.sh "<name>"` gives each parallel task its own `.planning/YYYY-MM-DD-<slug>/` directory; `PLAN_ID` pins a terminal to one of them, `set-active-plan.sh` switches the shared pointer.
 - **Threads whose cwd is a shared parent.** `PWF_PLAN_ROOT=<absolute path>` binds an agent thread to the project that owns the plan; an ambiguous cwd, where a nested project carries its own planning state, injects nothing rather than guessing.
-- **Session attachment.** On Codex and Hermes a project can opt into `.planning/sessions/<id>.attached`, so only attached sessions receive plan context in a shared working directory.
-- **Parallel-write guard.** When two sessions write the same plan, the next turn reports how much checked progress was lost instead of silently continuing on the clobbered file.
+- **Session attachment.** An `.attached` marker authorizes context but does not select a task. In the Codex, Hermes, Pi, and standalone hook routes, armed isolation with multiple plans requires `PLAN_ID`; otherwise context is refused. A project-root pin alone cannot distinguish tasks within that root.
+- **Parallel-write guard.** The next turn warns if checked items or completed phases decrease. This is an advisory check after the write, not a lock or merge mechanism. It does not detect every overwritten plan, `progress.md`, or `findings.md`.
 - **Stall-aware gate.** The completion gate reads the ledger, not `progress.md` mtime, so a worker that stopped producing events releases the stop instead of looping.
 - **One plan, many hosts.** Claude Code, Codex, Pi, Hermes and OpenCode read the same files, the same `.attestation` and the same gate counters, so a plan can be handed from one agent to another mid-run.
 
